@@ -1,4 +1,4 @@
-# Weather Data Pipeline
+# Trello Inspired Project
 
 A **Trello-inspired task management application** built with modern web technologies, allowing users to create, organize, and manage tasks on customizable boards. Designed to demonstrate full-stack development skills, responsive design, and secure user authentication.
 
