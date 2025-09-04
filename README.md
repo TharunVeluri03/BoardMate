@@ -16,11 +16,11 @@ A **Trello-inspired task management application** built with modern web technolo
 
 ## ⚙️ Tech Stack
 
-- **Frontend**: Next.js, React, TypeScript, Tailwind CSS  
-- **Backend**: Node.js, API routes via Next.js, database integration  
-- **Database**: PostgreSQL / MySQL (your setup)  
-- **Authentication**: Clerk  
-- **Version Control**: Git & GitHub  
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **Backend**: Node.js, API routes via Next.js, database integration
+- **Database**: PostgreSQL / MySQL (your setup)
+- **Authentication**: Clerk
+- **Version Control**: Git & GitHub
 
 ---
 
@@ -34,15 +34,14 @@ git clone https://github.com/yourusername/trello-clone.git
 ```
 cd trello-clone
 ```
-2. **Clone the repository**
+2. **Install dependencies**
 
 ```
 npm install
 # or
 yarn install
 ```
-3. **Configure environment variables**
-**Create a .env.local file in the root with your configuration:**
+3. **Configure environment variable. Create a .env.local file in the root with your configuration:**
 
 ```
 DATABASE_URL=your_database_url
