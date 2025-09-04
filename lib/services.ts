@@ -106,6 +106,7 @@ export const columnService = {
   },
 };
 
+
 export const taskService = {
   async getTasksByBoard(
     supabase: SupabaseClient,

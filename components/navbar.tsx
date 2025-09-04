@@ -1,14 +1,17 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
-import { ArrowLeft, ArrowRight, Filter, MoreHorizontal, Trello, FilterIcon} from "lucide-react";
-
+import {
+  ArrowLeft,
+  ArrowRight,
+  Filter,
+  MoreHorizontal,
+  Trello,
+} from "lucide-react";
+import { Button } from "./ui/button";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
-
-
+import { usePathname } from "next/navigation";
+import { Badge } from "./ui/badge";
 
 interface Props {
   boardTitle?: string;
@@ -17,32 +20,30 @@ interface Props {
   onFilterClick?: () => void;
   filterCount?: number;
 }
-
 export default function Navbar({
   boardTitle,
   onEditBoard,
   onFilterClick,
-  filterCount = 0
-
+  filterCount = 0,
 }: Props) {
   const { isSignedIn, user } = useUser();
   const pathname = usePathname();
 
-  const isDashboardPage = pathname == "/dashboard";
+  const isDashboardPage = pathname === "/dashboard";
   const isBoardPage = pathname.startsWith("/boards/");
 
   if (isDashboardPage) {
     return (
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
-          <div className="flex item-center space-x-2">
-            <Trello className="h-6 w-6 sm:w-8 text text-blue-600" />
+          <div className="flex items-center space-x-2">
+            <Trello className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
             <span className="text-xl sm:text-2xl font-bold text-gray-900">
               Trello Clone
             </span>
           </div>
 
-          <div className="flex items-cneter space-x-2 sm:space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <UserButton />
           </div>
         </div>
@@ -94,16 +95,18 @@ export default function Navbar({
                     }`}
                   onClick={onFilterClick}
                 >
-                  <FilterIcon className="h-3 w-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <Filter className="h-3 w-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                   <span className="hidden sm:inline">Filter</span>
                   {filterCount > 0 && (
-                    <Badge variant="secondary" className="text-xs ml-1 sm:ml-2">
+                    <Badge
+                      variant="secondary"
+                      className="text-xs ml-1 sm:ml-2 bg-blue-100 border-blue-200"
+                    >
                       {filterCount}
                     </Badge>
                   )}
                 </Button>
               )}
-
             </div>
           </div>
         </div>
@@ -114,12 +117,13 @@ export default function Navbar({
   return (
     <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
-        <div className="flex item-center space-x-2">
-          <Trello className="h-6 w-6 sm:w-8 text text-blue-600" />
+        <div className="flex items-center space-x-2">
+          <Trello className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
           <span className="text-xl sm:text-2xl font-bold text-gray-900">
             Trello Clone
           </span>
         </div>
+
         <div className="flex items-center space-x-2 sm:space-x-4">
           {isSignedIn ? (
             <div className="flex flex-col sm:flex-row items-end sm:items-center space-y-1 sm:space-y-0 sm:space-x-4">
