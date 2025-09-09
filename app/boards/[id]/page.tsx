@@ -56,7 +56,13 @@ interface TaskData {
 interface DroppableColumnProps {
     column: ColumnWithTasks;
     children: React.ReactNode;
-    onCreateTask: (taskData: TaskData) => Promise<void>;
+    onCreateTask: (taskData: {
+        title: string;
+        description?: string;
+        assignee?: string;
+        dueDate?: string;
+        priority: "low" | "medium" | "high";
+    }) => Promise<void>;
     onEditColumn: (column: ColumnWithTasks) => void;
 }
 
@@ -72,16 +78,16 @@ export function DroppableColumn({
     const handleCreateTask = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
-        const taskData: TaskData = {
-          title: (form.elements.namedItem("title") as HTMLInputElement).value,
-          description: (form.elements.namedItem("description") as HTMLTextAreaElement).value,
-          assignee: (form.elements.namedItem("assignee") as HTMLInputElement).value,
-          priority: (form.elements.namedItem("priority") as HTMLSelectElement).value as "low" | "medium" | "high",
-          dueDate: (form.elements.namedItem("dueDate") as HTMLInputElement).value,
+        const taskData = {
+            title: (form.elements.namedItem("title") as HTMLInputElement).value,
+            description: ((form.elements.namedItem("description") as HTMLTextAreaElement)?.value) || undefined,
+            assignee: ((form.elements.namedItem("assignee") as HTMLInputElement)?.value) || undefined,
+            dueDate: ((form.elements.namedItem("dueDate") as HTMLInputElement)?.value) || undefined,
+            priority: ((form.elements.namedItem("priority") as HTMLSelectElement)?.value as "low" | "medium" | "high") || "medium",
         };
         await onCreateTask(taskData);
         form.reset();
-      };
+    };
 
     return (
         <div
@@ -407,27 +413,26 @@ export default function BoardPage() {
         await createRealTask(targetColumn.id, taskData);
     }
 
-    async function handleCreateTask(e: any) {
+    async function handleCreateTaskFromForm(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
+        const form = e.currentTarget;
+
         const taskData = {
-            title: formData.get("title") as string,
-            description: (formData.get("description") as string) || undefined,
-            assignee: (formData.get("assignee") as string) || undefined,
-            dueDate: (formData.get("dueDate") as string) || undefined,
-            priority:
-                (formData.get("priority") as "low" | "medium" | "high") || "medium",
+            title: (form.elements.namedItem("title") as HTMLInputElement).value,
+            description: ((form.elements.namedItem("description") as HTMLTextAreaElement)?.value) || undefined,
+            assignee: ((form.elements.namedItem("assignee") as HTMLInputElement)?.value) || undefined,
+            dueDate: ((form.elements.namedItem("dueDate") as HTMLInputElement)?.value) || undefined,
+            priority: ((form.elements.namedItem("priority") as HTMLSelectElement)?.value as "low" | "medium" | "high") || "medium",
         };
 
         if (taskData.title.trim()) {
             await createTask(taskData);
 
-            const trigger = document.querySelector(
-                '[data-state="open"'
-            ) as HTMLElement;
+            const trigger = document.querySelector('[data-state="open"') as HTMLElement;
             if (trigger) trigger.click();
         }
     }
+
 
     function handleDragStart(event: DragStartEvent) {
         const taskId = event.active.id as string;
@@ -749,7 +754,7 @@ export default function BoardPage() {
                                     </p>
                                 </DialogHeader>
 
-                                <form className="space-y-4" onSubmit={handleCreateTask}>
+                                <form className="space-y-4" onSubmit={handleCreateTaskFromForm}>
                                     <div className="space-y-2">
                                         <Label>Title *</Label>
                                         <Input
@@ -826,7 +831,7 @@ export default function BoardPage() {
                                 <DroppableColumn
                                     key={key}
                                     column={column}
-                                    onCreateTask={handleCreateTask}
+                                    onCreateTask={createTask}
                                     onEditColumn={handleEditColumn}
                                 >
                                     <SortableContext
