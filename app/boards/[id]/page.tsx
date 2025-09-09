@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useBoard } from "@/lib/hooks/useBoards";
 import { ColumnWithTasks, Task } from "@/lib/supabase/models";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { Calendar, MoreHorizontal, Plus, Pointer, User } from "lucide-react";
+import { Calendar, MoreHorizontal, Plus, User } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import {
@@ -44,14 +44,6 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
-interface TaskData {
-    title: string;
-    description?: string;
-    assignee?: string;
-    priority?: "low" | "medium" | "high";
-    dueDate?: string;
-}
 
 interface DroppableColumnProps {
     column: ColumnWithTasks;

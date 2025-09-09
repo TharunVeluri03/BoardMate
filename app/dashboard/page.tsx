@@ -7,7 +7,6 @@ import {
   Filter,
   Grid3x3,
   List,
-  Loader2,
   Plus,
   Rocket,
   Search,
@@ -24,7 +23,7 @@ import { Board } from "@/lib/supabase/models";
 
 export default function Dashboard() {
   const { user } = useUser();
-  const { createBoard, boards, loading, error } = useBoards();
+  const { createBoard, boards, error } = useBoards();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false)
 
@@ -107,7 +106,7 @@ export default function Dashboard() {
             {user?.firstName ?? user?.emailAddresses[0].emailAddress}! 👋
           </h1>
           <p className="text-gray-600">
-            Here' what's happening with your boards today
+            Here&apos; what&apos;s happening with your boards today
           </p>
         </div>
 
