@@ -45,18 +45,44 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-function DroppableColumn({
+interface TaskData {
+    title: string;
+    description?: string;
+    assignee?: string;
+    priority?: "low" | "medium" | "high";
+    dueDate?: string;
+}
+
+interface DroppableColumnProps {
+    column: ColumnWithTasks;
+    children: React.ReactNode;
+    onCreateTask: (taskData: TaskData) => Promise<void>;
+    onEditColumn: (column: ColumnWithTasks) => void;
+}
+
+export function DroppableColumn({
     column,
     children,
     onCreateTask,
     onEditColumn,
-}: {
-    column: ColumnWithTasks;
-    children: React.ReactNode;
-    onCreateTask: (taskData: any) => Promise<void>;
-    onEditColumn: (column: ColumnWithTasks) => void;
-}) {
+}: DroppableColumnProps) {
     const { setNodeRef, isOver } = useDroppable({ id: column.id });
+
+    // Form submit handler
+    const handleCreateTask = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const taskData: TaskData = {
+          title: (form.elements.namedItem("title") as HTMLInputElement).value,
+          description: (form.elements.namedItem("description") as HTMLTextAreaElement).value,
+          assignee: (form.elements.namedItem("assignee") as HTMLInputElement).value,
+          priority: (form.elements.namedItem("priority") as HTMLSelectElement).value as "low" | "medium" | "high",
+          dueDate: (form.elements.namedItem("dueDate") as HTMLInputElement).value,
+        };
+        await onCreateTask(taskData);
+        form.reset();
+      };
+
     return (
         <div
             ref={setNodeRef}
@@ -89,7 +115,7 @@ function DroppableColumn({
                     </div>
                 </div>
 
-                {/* column content */}
+                {/* Column content */}
                 <div className="p-2">
                     {children}
                     <Dialog>
@@ -108,14 +134,10 @@ function DroppableColumn({
                                 <p className="text-sm text-gray-600">Add a task to the board</p>
                             </DialogHeader>
 
-                            <form className="space-y-4" onSubmit={onCreateTask}>
+                            <form className="space-y-4" onSubmit={handleCreateTask}>
                                 <div className="space-y-2">
                                     <Label>Title *</Label>
-                                    <Input
-                                        id="title"
-                                        name="title"
-                                        placeholder="Enter task title"
-                                    />
+                                    <Input id="title" name="title" placeholder="Enter task title" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Description</Label>
@@ -128,11 +150,7 @@ function DroppableColumn({
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Assignee</Label>
-                                    <Input
-                                        id="assignee"
-                                        name="assignee"
-                                        placeholder="Who should do this?"
-                                    />
+                                    <Input id="assignee" name="assignee" placeholder="Who should do this?" />
                                 </div>
 
                                 <div className="space-y-2">
@@ -617,8 +635,8 @@ export default function BoardPage() {
                                             key={key}
                                             type="button"
                                             className={`w-8 h-8 rounded-full ${color} ${color === newColor
-                                                    ? "ring-2 ring-offset-2 ring-gray-900"
-                                                    : ""
+                                                ? "ring-2 ring-offset-2 ring-gray-900"
+                                                : ""
                                                 } `}
                                             onClick={() => setNewColor(color)}
                                         />
